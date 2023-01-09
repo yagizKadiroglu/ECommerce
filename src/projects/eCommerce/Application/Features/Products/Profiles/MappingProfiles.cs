@@ -27,6 +27,7 @@ namespace Application.Features.Products.Profiles
 
             CreateMap<IPaginate<Product>, ProductListModels>().ReverseMap();
             CreateMap<Product, ProductListDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
 
 
         }

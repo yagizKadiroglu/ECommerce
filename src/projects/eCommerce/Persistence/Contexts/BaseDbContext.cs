@@ -18,6 +18,10 @@ namespace Persistence.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<IndividualCustomer> IndividualCustomer { get; set; }
+        public DbSet<CorporateCustomer> CorporateCustomer { get; set; }
+
 
         public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration) : base(dbContextOptions)
         {
@@ -81,6 +85,31 @@ namespace Persistence.Contexts
                 buildAction.HasOne(u => u.User);
                 buildAction.HasOne(u => u.OperationClaim);
             });
+
+            modelBuilder.Entity<Customer>(buildAction =>
+            {
+                buildAction.ToTable("Customers").HasKey(c => c.Id);
+                buildAction.Property(c => c.Id).HasColumnName("Id");
+                buildAction.Property(c => c.UserId).HasColumnName("UserId");
+                buildAction.HasIndex(c => c.UserId, "UK_Customers_UserId").IsUnique();
+                buildAction.HasOne(c => c.User);
+            });
+
+            modelBuilder.Entity<IndividualCustomer>(buildAction =>
+            {
+                buildAction.ToTable("Customers");
+                buildAction.Property(i => i.FirstName).HasColumnName("FirstName");
+                buildAction.Property(i => i.LastName).HasColumnName("LastName");
+                buildAction.Property(i => i.NationalIdentity).HasColumnName("NationalIdentity");
+            });
+
+            modelBuilder.Entity<CorporateCustomer>(buildAction =>
+            {
+                buildAction.ToTable("Customers");
+                buildAction.Property(c => c.CompanyName).HasColumnName("CompanyName");
+                buildAction.Property(c => c.TaxNo).HasColumnName("TaxNo");
+            });
+
 
 
         }
